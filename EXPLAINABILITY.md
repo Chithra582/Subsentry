@@ -1,56 +1,57 @@
-# Explainability & Transparency Report: SubSentry Agent
+# EXPLAINABILITY — SubSentry Agent
 
-> **Specification:** OpenGAP v0.1.0  
-> **Domain:** Finance / Subscription Tracking & Recurring Expense Auditing  
-> **Target System:** SubSentry (Subscription Management Dashboard)  
-> **Audit Status:** Qualified for HiDevs GitAgent Passport  
+> **Admissibility & Transparency Report for OpenGAP / Agent Passport**  
+> *Agent Name:* SubSentry Agent (`subsentry-agent`)  
+> *Specification:* OpenGAP v0.1.0  
+> *Domain:* Finance / Subscription Tracking & Recurring Expense Auditing  
 
 ---
 
-## 1. Overview & Operational Purpose
+## 1. Overview & Financial Purpose
 
-**SubSentry Agent** is an autonomous subscription management, spend auditing, and renewal alert agent designed for **SubSentry**. The agent tackles subscription creep—the gradual accumulation of recurring charges and forgotten free trials that erode personal budgets.
+SubSentry Agent is an autonomous subscription management, recurring payment auditing, and renewal sentinel intelligence built for consumers and small teams. The underlying system operates across user-authorized billing signals, electronic payment receipts, and manual subscription inventories—tracking vendor names, billing frequencies (monthly, quarterly, annual), recurring amounts, currencies, and upcoming renewal deadlines.
 
-Core capabilities:
-1. **Billing Signal Ingestion**: Extracts recurring charge metadata from Gmail receipts using read-only OAuth scopes.
-2. **Spend Normalization & Forecasting**: Aggregates disparate weekly, monthly, and yearly cycles into unified burn rate metrics.
-3. **Renewal Sentinel & Trial Cliff Alerts**: Dispatches preemptive warnings ahead of renewal deadlines and free trial conversions.
-4. **Cancellation Pathfinder**: Delivers targeted, direct unsubscription guides to bypass dark-pattern retention traps.
+The agent's primary financial purpose is to eliminate "subscription creep" and silent money leaks. By converting opaque bank deductions and buried free-trial conversions into normalized monthly/yearly burn projections and proactive cancellation alerts, the agent restores financial sovereignty and shields users from predatory dark-pattern auto-renewals.
 
 ---
 
 ## 2. How the Agent Decides (Decision-Making Logic)
 
+SubSentry Agent operates across a deterministic, multi-stage decision pipeline that grounds every calculation in verified billing records:
+
 ```
-Incoming Signal (Gmail Ingestion / Manual Subscription Entry / Sync Trigger)
-  │
-  ├── 1. Privacy Filter & PII Sanitization
-  │      ├── Filter emails against subscription/billing keywords
-  │      ├── Discard unrelated correspondence immediately
-  │      └── Redact credit card numbers, passwords, and personal identifiers
-  │
-  ├── 2. Subscription Metadata Extraction
-  │      ├── Extract Vendor Name (e.g. Netflix, GitHub, Spotify)
-  │      ├── Extract Amount & Currency (e.g. $14.99 USD)
-  │      ├── Identify Billing Frequency (Weekly, Monthly, Annual)
-  │      └── Determine Next Renewal Date & Trial Status (Active Trial vs. Paid)
-  │
-  ├── 3. Financial Aggregation & Burn Calculation
-  │      ├── Normalize monthly equivalent: Monthly_Spend = sum(cost * freq_multiplier)
-  │      ├── Project annual commitment: Annual_Spend = Monthly_Spend * 12
-  │      └── Assign spend category (Entertainment, Software, Utilities, Fitness)
-  │
-  ├── 4. Renewal & Trial Monitoring Engine
-  │      ├── Calculate days until next renewal: ΔT = Renewal_Date - Current_Date
-  │      ├── If ΔT <= 3 days (or trial expiration approaching):
-  │      │   └── Trigger Priority Renewal Warning Notification
-  │      └── If user marks "Want to Cancel":
-  │          └── Route to Cancellation Pathfinder for direct unsubscription steps
-  │
-  └── 5. Audit Trail & Human Oversight
-         ├── Store sanitized subscription record in user database
-         └── Await user confirmation for manual edits or unlinking
+[Billing Receipts & Invoices] ──> [Data Hygiene & PII Sanitization] ──> [Burn Rate & Recurrence Analysis]
+                                                                                     │
+                                                                                     ▼
+[Actionable Advice & Renewal Alerts] <── [Consumer Advocacy & Safety Gate] <── [Renewal & Dark-Pattern Detection]
 ```
+
+### 2.1 Ingestion & PII Sanitization
+- **Decision:** Determines whether incoming email receipts or manual entries are valid billing records and purges non-billing data.
+- **Rules:**
+  - Filters email metadata using strict billing keywords (`invoice`, `receipt`, `subscription`, `recurring`, `free trial`, `membership`).
+  - Immediately discards email body text and non-billing correspondence; extracts only vendor, amount, currency, and renewal date.
+  - Strips credit card numbers, bank account details, physical addresses, and confidential communication strings before processing.
+
+### 2.2 Recurring Spend Normalization & Burn Analysis
+- **Decision:** Converts disparate billing frequencies into standardized cash-flow run rates.
+- **Rules:**
+  - Normalizes frequencies: Weekly charges are multiplied by 4.33, quarterly charges divided by 3, and annual charges divided by 12 to yield exact Monthly Burn.
+  - Projects Annual Commitment: `Annual_Spend = Monthly_Spend * 12`.
+  - Automatically tags services into functional categories (Entertainment, Productivity, Cloud Infrastructure, Fitness, Utilities).
+
+### 2.3 Renewal Timelines & Dark-Pattern Detection
+- **Decision:** Identifies upcoming billing cliffs, price creeps, and predatory cancellation funnels.
+- **Rules:**
+  - Computes days remaining: `ΔT = Renewal_Date - Current_Date`. If `ΔT <= 3 days` (or trial conversion is impending), flags as High Priority Warning.
+  - Compares new invoice values against historical vendor baselines; triggers a "Price Hike Detected" flag if cost increases by > 5%.
+  - Detects complicated retention loops and retrieves direct unsubscription portal URLs.
+
+### 2.4 Consumer Advocacy & Safety Gate
+- **Decision:** Enforces strict consumer advocacy and non-autonomous financial boundaries.
+- **Rules:**
+  - **No Autonomous Cancellation**: The agent never executes a cancellation or modifies an account autonomously; it provides direct links, verified cancellation steps, and email drafts for the user to execute.
+  - **Zero Telemetry**: User spending figures and merchant names are never monetized, transmitted to third-party ad networks, or used for model training.
 
 ---
 
@@ -58,36 +59,44 @@ Incoming Signal (Gmail Ingestion / Manual Subscription Entry / Sync Trigger)
 
 | Data Input | Source | Purpose | Data Handling & Privacy |
 |---|---|---|---|
-| **Billing Receipts & Invoices** | Gmail Read-Only API (`gmail.readonly`) | Detecting recurring subscriptions and renewal notices | Scanned ephemerally; message bodies discarded; only billing metadata retained |
-| **Manual Subscriptions** | User Dashboard Inputs | Adding offline or non-email recurring services | Encrypted at rest in MongoDB; editable and deletable by user |
-| **Renewal Timestamps** | Invoiced receipts & user calendars | Triggering 72h / 24h countdown alerts | Stored as ISO timestamps; logged for audit scheduling |
-| **Vendor Metadata** | Open-source subscription directory | Categorizing services and generating cancellation links | Public reference database; contains zero user telemetry |
+| **Billing Receipts & Invoices** | Gmail Read-Only API (`gmail.readonly`) | Detecting recurring subscriptions, trial conversions, and renewal receipts | Processed ephemerally in active memory; message bodies discarded; only billing metadata retained |
+| **Manual Subscription Entries** | User Dashboard Input | Adding offline, cash, or alternative recurring payments | Encrypted at rest in user database; editable and deletable on demand |
+| **Renewal Timestamps** | Invoiced receipts & system clock | Scheduling 72-hour and 24-hour advance renewal warnings | Stored as ISO 8601 timestamps; used exclusively for countdown notifications |
+| **Vendor Cancellation Directory** | Public unsubscription knowledge base | Providing direct unsubscription links and step-by-step cancellation instructions | Public static reference; contains zero user telemetry or tracking tokens |
+
+SubSentry Agent complies with privacy-by-design standards:
+- **Strict Read-Only Scope:** Operates exclusively under `gmail.readonly`; cannot send, modify, or delete user emails.
+- **No PII collection:** Full card numbers, CVVs, bank credentials, and unrelated private messages are never collected or stored.
+- **Zero commercial data mining:** User financial profiles, spending habits, and vendor subscriptions are never monetized or shared with third parties.
+- **Right to Erasure:** Users can revoke OAuth tokens and permanently purge all synced subscription history with a single click.
 
 ---
 
 ## 4. Known Limitations & Failure Modes
 
-### 1. Ambiguous Billing Receipt Formats
-*Limitation:* Aggregator receipts (such as Apple App Store or PayPal monthly digests) bundle multiple services together without itemized billing frequency details.  
-*Mitigation:* The agent flags multi-item aggregator invoices as "Candidate Subscriptions" and prompts the user for one-click verification and itemization before inclusion in spend calculations.
+Reviewers, auditors, and users should note the following operational constraints:
 
-### 2. Silent Price Hikes by Vendors
-*Limitation:* Vendors frequently update subscription prices without changing the email subject line, making simple keyword taggers blind to cost increases.  
-*Mitigation:* The agent tracks historical invoice amounts per vendor; any delta exceeding 5% triggers a prominent "Price Hike Detected" notification banner.
+1. **Ambiguous Billing Receipt Formats:**
+   - *Limitation:* Bundled aggregator invoices (such as Apple App Store, Google Play, or PayPal monthly receipts) combine multiple disparate items without granular subscription frequencies.
+   - *Mitigation:* The agent flags bundled receipts as "Candidate Subscriptions" and prompts the user for one-click verification and line-item breakdown before finalizing spend totals.
 
-### 3. Dynamic Dark Patterns in Cancellation Flows
-*Limitation:* Subscription providers continually modify cancellation URLs and user flows to deter unsubscription.  
-*Mitigation:* The agent maintains crowdsourced community-validated unsubscription pathways and provides fallback direct account settings links and customer support templates.
+2. **Silent Price Hikes by Vendors:**
+   - *Limitation:* Providers frequently increase subscription rates without modifying the invoice subject line, making superficial keyword taggers blind to cost inflation.
+   - *Mitigation:* The agent continuously tracks historical invoice amounts per vendor; any delta exceeding 5% triggers a prominent "Price Hike Detected" notification banner.
 
-### 4. Multi-Currency Fluctuations
-*Limitation:* Subscriptions billed in foreign currencies can introduce variance in local monthly burn rate projections.  
-*Mitigation:* The agent records native billing currencies and utilizes daily cached exchange rates, explicitly displaying the currency conversion basis to the user.
+3. **Dynamic Dark Patterns in Cancellation Flows:**
+   - *Limitation:* Subscription providers continually alter cancellation URLs, conceal account management buttons, and implement forced phone-call retention policies.
+   - *Mitigation:* The agent maintains community-verified unsubscription guides, direct account settings deep-links, and pre-formatted cancellation email drafts for manual service escalation.
+
+4. **Multi-Currency Fluctuations & Foreign Fees:**
+   - *Limitation:* Subscriptions billed in foreign currencies fluctuate against the user's primary currency, creating minor variances in projected annual burn rates.
+   - *Mitigation:* The agent explicitly displays the native billing currency alongside normalized conversions using daily cached exchange rate baselines.
 
 ---
 
 ## 5. Verification, Safety & Human Oversight
 
-1. **Strict Read-Only Guarantee**: The agent is architecturally blocked from modifying, deleting, or sending emails. OAuth scopes are rigidly audited.
-2. **Human-in-the-Loop Cancellation**: The agent never terminates a subscription autonomously. It furnishes the user with instructions, links, and renewal dates, leaving execution in human hands.
-3. **Instant Account Unlinking**: Users can revoke Gmail access and delete all stored subscription records with a single click at any time.
-4. **Zero Financial Telemetry**: Subscription data is strictly used for personal dashboard calculations and is never monetized, traded, or shared with third-party advertisers.
+- **Strict Read-Only Least Privilege:** Architectural constraints prevent any email write or send operations; OAuth tokens are scoped minimally to read-only metadata extraction.
+- **Human-in-the-Loop Governance:** The agent acts strictly as an advisory copilot; final contract cancellations, renewals, and financial choices remain solely under human control.
+- **Deterministic Quality Gates:** Financial figures are calculated through verifiable arithmetic routines rather than probabilistic LLM estimations.
+- **Kill Switch & Immutable Audit Logging:** Users can terminate data sync instantly from the dashboard; all automated detection decisions and notification dispatches are recorded in structured audit logs.
