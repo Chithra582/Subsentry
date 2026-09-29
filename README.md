@@ -1,5 +1,10 @@
 # 🛡️ SubSentry
 
+[![OpenGAP Spec 0.1.0](https://img.shields.io/badge/OpenGAP-0.1.0-blue.svg)](https://opengitagent.org)
+[![GitAgent Passport](https://img.shields.io/badge/GitAgent%20Passport-Ready-brightgreen.svg)](https://app.hidevs.xyz/passport/submit)
+[![Category](https://img.shields.io/badge/Category-Finance-emerald.svg)](https://app.hidevs.xyz/passport/submit)
+[![Compliance](https://img.shields.io/badge/Compliance-GDPR%20%7C%20PCI--DSS-orange.svg)](EXPLAINABILITY.md)
+
 **Stop silent money leaks. Own your subscriptions.**
 
 SubSentry is an open-source **subscription management dashboard** that helps users track recurring payments, free trials, upcoming renewals, and automatically detect subscriptions using Gmail (read-only access).
@@ -218,3 +223,14 @@ A: It is an MVP built for OpenCode with production-grade patterns.
 ## 🙌 Acknowledgements
 
 Built with ❤️ during **Geekhaven OpenCode**.
+
+---
+
+## GitAgent Passport Qualification
+
+This repository is fully compliant with the **OpenGAP Spec 0.1.0** standard and qualified for the **HiDevs GitAgent Passport**:
+
+- **Checkpoint 1 (Validate):** Verified OpenGAP spec 0.1.0 compliance via [`agent.yaml`](agent.yaml), [`SOUL.md`](SOUL.md), [`skills/`](skills/), and [`tools/`](tools/).
+- **Checkpoint 2 (Explain):** Comprehensive 5-section transparency report in [`EXPLAINABILITY.md`](EXPLAINABILITY.md) detailing read-only Gmail ingestion, recurring spend forecasting, PCI-DSS/GDPR compliance, and failure mode mitigations.
+- **Checkpoint 3 (Export):** Cross-framework export compatibility tested across OpenAI SDK, CrewAI, Claude Code, and Lyzr.
+- **Target Category:** **`Finance`** (Subscription Tracking & Recurring Expense Auditing).

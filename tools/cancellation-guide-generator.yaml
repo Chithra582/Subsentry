@@ -1,0 +1,15 @@
+name: cancellation-guide-generator
+description: Generate direct unsubscription instructions and support templates for a vendor.
+input_schema:
+  type: object
+  properties:
+    vendor_name:
+      type: string
+      description: The service name to generate cancellation steps for.
+    platform:
+      type: string
+      enum: [web, ios_app_store, google_play, direct_email]
+      description: Platform through which the subscription was originated.
+  required:
+    - vendor_name
+    - platform

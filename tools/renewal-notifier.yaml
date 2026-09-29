@@ -1,0 +1,21 @@
+name: renewal-notifier
+description: Schedule and dispatch renewal alerts and trial cliff countdowns.
+input_schema:
+  type: object
+  properties:
+    subscription_id:
+      type: string
+      description: Unique identifier of the subscription.
+    vendor_name:
+      type: string
+      description: Name of the vendor renewing.
+    renewal_date:
+      type: string
+      description: Target renewal timestamp in ISO 8601 format.
+    is_trial:
+      type: boolean
+      description: Whether the expiring event is a free trial conversion.
+  required:
+    - subscription_id
+    - vendor_name
+    - renewal_date

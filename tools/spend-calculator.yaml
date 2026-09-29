@@ -1,0 +1,26 @@
+name: spend-calculator
+description: Calculate normalized monthly and annual burn projections from active subscriptions.
+input_schema:
+  type: object
+  properties:
+    subscriptions:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          amount:
+            type: number
+          frequency:
+            type: string
+            enum: [weekly, monthly, quarterly, yearly]
+          currency:
+            type: string
+        required:
+          - name
+          - amount
+          - frequency
+      description: List of active subscription items to evaluate.
+  required:
+    - subscriptions

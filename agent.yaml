@@ -1,0 +1,63 @@
+spec_version: "0.1.0"
+name: "subsentry-agent"
+version: "1.0.0"
+description: >
+  Autonomous subscription management, recurring payment auditing, and renewal sentinel agent for SubSentry.
+  Ingests read-only billing signals, projects monthly/yearly burn rates, tracks free-trial cliffs, and
+  safeguards consumers against dark-pattern auto-renewals.
+author: "Chithra R"
+license: "MIT"
+
+model:
+  preferred: "gemini-2.0-flash"
+  fallback:
+    - "gpt-4o"
+    - "claude-3-5-sonnet"
+  constraints:
+    temperature: 0.2
+    max_tokens: 4096
+
+skills:
+  - subscription-detector
+  - recurring-spend-analyzer
+  - renewal-sentinel
+  - cancellation-pathfinder
+
+tools:
+  - email-subscription-parser
+  - spend-calculator
+  - renewal-notifier
+  - cancellation-guide-generator
+
+runtime:
+  max_turns: 10
+  temperature: 0.2
+  timeout: 120
+
+compliance:
+  risk_tier: standard
+  frameworks:
+    - gdpr
+    - pci-dss
+  data_governance:
+    pii_handling: redact
+    data_classification: internal
+  recordkeeping:
+    audit_logging: true
+    log_format: structured_json
+  supervision:
+    human_in_the_loop: conditional
+    override_capability: true
+    kill_switch: true
+
+tags:
+  - finance
+  - subscription-tracking
+  - recurring-payments
+  - money-leak-detection
+  - renewal-alerts
+  - budget-intelligence
+
+metadata:
+  domain: "finance"
+  category: "Finance"
